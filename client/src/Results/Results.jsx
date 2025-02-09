@@ -40,25 +40,22 @@ const Results = () => {
     ],
   };
 
-  // Updated Insights based on actual scores
-  const getInsights = () => {
+  // Performance summary calculations
+  const getPerformanceSummary = () => {
     const totalQuestions = questions.length;
-    const correctAnswers = scores.filter(score => score === 10).length;
-    const partialAnswers = scores.filter(score => score > 0 && score < 10).length;
-    const incorrectAnswers = scores.filter(score => score === 0).length;
-
-    // Accuracy based on totalScore out of 100
-    const accuracy = ((totalScore / (totalQuestions * 10)) * 100).toFixed(2);
+    const maxScore = Math.max(...scores);
+    const minScore = Math.min(...scores);
+    const averageScore = (totalScore / totalQuestions).toFixed(1);
 
     return {
-      correctAnswers,
-      partialAnswers,
-      incorrectAnswers,
-      accuracy,
+      totalQuestions,
+      maxScore,
+      minScore,
+      averageScore,
     };
   };
 
-  const insights = getInsights();
+  const performanceSummary = getPerformanceSummary();
 
   return (
     <div className="results-container">
@@ -80,12 +77,12 @@ const Results = () => {
         </div>
 
         <div className="insights-container">
-          <h3>Key Insights</h3>
+          <h3>Performance Summary</h3>
           <div className="insight-card">
-            <p><strong>Accuracy:</strong> {insights.accuracy}%</p>
-            <p><strong>Correct Answers:</strong> {insights.correctAnswers}</p>
-            <p><strong>Partial Answers:</strong> {insights.partialAnswers}</p>
-            <p><strong>Incorrect Answers:</strong> {insights.incorrectAnswers}</p>
+            <p><strong>Total Questions:</strong> {performanceSummary.totalQuestions}</p>
+            <p><strong>Highest Score:</strong> {performanceSummary.maxScore}/10</p>
+            <p><strong>Lowest Score:</strong> {performanceSummary.minScore}/10</p>
+            <p><strong>Average per Question:</strong> {performanceSummary.averageScore}/10</p>
           </div>
         </div>
       </div>

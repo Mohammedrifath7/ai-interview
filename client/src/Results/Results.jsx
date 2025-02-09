@@ -40,18 +40,21 @@ const Results = () => {
     ],
   };
 
-  // Insights based on scores
+  // Updated Insights based on actual scores
   const getInsights = () => {
     const totalQuestions = questions.length;
-    const correctAnswers = scores.filter(score => score >= 7).length;
-    const partialAnswers = scores.filter(score => score >= 4 && score < 7).length;
-    const incorrectAnswers = scores.filter(score => score < 4).length;
+    const correctAnswers = scores.filter(score => score === 10).length;
+    const partialAnswers = scores.filter(score => score > 0 && score < 10).length;
+    const incorrectAnswers = scores.filter(score => score === 0).length;
+
+    // Accuracy based on totalScore out of 100
+    const accuracy = ((totalScore / (totalQuestions * 10)) * 100).toFixed(2);
 
     return {
       correctAnswers,
       partialAnswers,
       incorrectAnswers,
-      accuracy: ((correctAnswers / totalQuestions) * 100).toFixed(2),
+      accuracy,
     };
   };
 

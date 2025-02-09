@@ -1,64 +1,111 @@
 import React, { useCallback, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
+import * as pdfjsLib from 'pdfjs-dist';
+import 'pdfjs-dist/build/pdf.worker.min.mjs'; 
 import './Resume.css';
 import leftImage from '../assets/left-image_interview_Image.jpg';
-import new_Image from '../assets/business-meeting-room-office.jpg';
+import Groq from 'groq-sdk';
+import { GROQ_API_KEY } from '../constants/config';
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.mjs',
+  import.meta.url
+).toString();
 
 const Resume = () => {
-  const [isDragActive, setIsDragActive] = useState(false);
-  const [uploadedFile, setUploadedFile] = useState(null);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const onDrop = useCallback((acceptedFiles) => {
-    setIsDragActive(false);
-    const file = acceptedFiles[0];
-    if (file && file.type === 'application/pdf') {
-      setUploadedFile(file);
-      console.log('Uploaded file:', file);
+  const extractTextFromPDF = async (file) => {
+    const fileReader = new FileReader();
+    
+    return new Promise((resolve, reject) => {
+      fileReader.onload = async function () {
+        const typedArray = new Uint8Array(this.result);
+        const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
+        let extractedText = '';
+
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const textContent = await page.getTextContent();
+          const pageText = textContent.items.map(item => item.str).join(' ');
+          extractedText += pageText + '\n';
+        }
+
+        resolve(extractedText);
+      };
+
+      fileReader.onerror = () => reject('Error reading the file');
+      fileReader.readAsArrayBuffer(file);
+    });
+  };
+
+  const generateInterviewQuestions = async (resumeText) => {
+    try {
+      const groqClient = new Groq({ apiKey: GROQ_API_KEY, dangerouslyAllowBrowser: true });
+
+      const response = await groqClient.chat.completions.create({
+        messages: [{
+          role: "user",
+          content: `Generate 10 separate and structured technical interview questions based on this resume: ${resumeText}. Format as a numbered list with clear separation.`
+        }],
+        model: "llama-3.3-70b-versatile",
+        temperature: 0.3
+      });
+
+      let questions = response.choices[0].message.content.split(/\d+\.\s+/).filter(q => q.trim());
+      if (questions.length > 10) questions = questions.slice(1, 11); // Remove unwanted first line if present
+      return questions;
+    } catch (error) {
+      console.error("Error generating interview questions:", error);
+      return [];
     }
-  }, []);
+  };
 
-  const { getRootProps, getInputProps, isDragReject } = useDropzone({
+  const onDrop = useCallback(async (acceptedFiles) => {
+    setLoading(true);
+    const file = acceptedFiles[0];
+
+    if (file && file.type === 'application/pdf') {
+      try {
+        const resumeText = await extractTextFromPDF(file);
+        const questions = await generateInterviewQuestions(resumeText);
+
+        navigate('/interview', { state: { questions } });
+      } catch (error) {
+        console.error('Error processing resume:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  }, [navigate]);
+
+  const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    onDragEnter: () => setIsDragActive(true),
-    onDragLeave: () => setIsDragActive(false),
     accept: { 'application/pdf': ['.pdf'] },
     multiple: false
   });
 
   return (
     <div className="resume-container">
-      {/* Left Section */}
       <div className="left-section">
         <div className="title-page">AI Interview</div>
         <img src={leftImage} alt="Interview" className="interview-image" />
       </div>
 
-      {/* Right Section */}
       <div className="right-section">
         <h2 className="upload-title">Upload Resume</h2>
 
-        <div 
-          {...getRootProps()} 
-          className={`upload-container ${isDragActive ? 'active' : ''} ${isDragReject ? 'reject' : ''}`}
-        >
+        <div {...getRootProps()} className="upload-container">
           <input {...getInputProps()} />
           <div className="upload-content">
-            <svg className="upload-icon" viewBox="0 0 24 24">
-              <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/>
-              <path d="M8 15.01l3.09 3.89L16 13.01 14.21 12 11.17 15.99 9 13.5z"/>
-            </svg>
-
-            {!uploadedFile ? (
+            {loading ? <div className="loading-spinner"></div> : (
               <>
                 <p className="upload-subtitle">Drag & Drop or</p>
                 <button className="browse-button">Browse File</button>
                 <p className="file-type">Only PDF</p>
               </>
-            ) : (
-              <div className="upload-success">
-                <p className="file-name">{uploadedFile.name}</p>
-                <p className="success-message">Uploaded Successfully!</p>
-              </div>
             )}
           </div>
         </div>
@@ -68,4 +115,3 @@ const Resume = () => {
 };
 
 export default Resume;
-

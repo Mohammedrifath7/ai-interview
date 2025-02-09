@@ -30,6 +30,10 @@ const Interview = () => {
 
     try {
       for (let i = 0; i < questions.length; i++) {
+        if (!answers[i].trim()) {
+          scores.push(0);
+          continue;
+        }
         const response = await groqClient.chat.completions.create({
           messages: [{
             role: "user",
@@ -38,11 +42,13 @@ const Interview = () => {
               Answer: ${answers[i]}
               
               Provide a score between 0-10 where:
+              -0:If they didn't provide any answers,and like I dont know,or som irrelevant answers
               - 0-3: Completely incorrect or missing
               - 4-6: Partially correct but incomplete
               - 7-8: Correct but could be improved
               - 9-10: Excellent, comprehensive answer
-              
+              Analyze properly and provide the mark accurately.
+                  
               Return ONLY the numeric score without any explanation.`
           }],
           model: "llama-3.3-70b-versatile",

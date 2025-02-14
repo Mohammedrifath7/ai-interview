@@ -43,20 +43,82 @@ const Resume = () => {
 
   const generateInterviewQuestions = async (resumeText) => {
     try {
-      const groqClient = new Groq({ apiKey: GROQ_API_KEY, dangerouslyAllowBrowser: true });
-
+      const groqClient = new Groq({ 
+        apiKey: GROQ_API_KEY, 
+        dangerouslyAllowBrowser: true 
+      });
+  
+      const prompt = `Analyze this resume carefully and generate 10 unique technical interview questions. 
+  Resume: ${resumeText}
+  -If they gave resume asks different questions each time,like if they provide a resume,asking 10 questions me if they are giving the same resume to you ask some other 10 different questions.Dont repeat the same questions.
+  -Asks medium level of questions ,ask small questions.
+  REQUIREMENTS:
+  1. Question Difficulty:
+     - Start with fundamental concepts (first 4 questions)
+     - Progress to moderate complexity (next 4 questions)
+     - End with 2 scenario-based questions
+  
+  2. Question Types:
+     - Technical concepts from their listed skills
+     - Tools and technologies they've actually used
+     - Basic problem-solving scenarios from their work experience
+     - Real-world applications of their knowledge
+  
+  3. Question Structure:
+     - Must be clearly worded and specific
+     - Should require explanatory answers (not just yes/no)
+     - Should relate directly to their background
+     - Avoid theoretical concepts they haven't encountered
+  
+  4. Focus Areas:
+     - Primary technical skills (mentioned multiple times or in recent roles)
+     - Core technologies in their industry
+     - Common challenges in their domain
+     - Best practices they should know
+  
+  5. Exclude:
+     - Complex coding challenges
+     - System design questions
+     - Framework-specific implementation details
+     - Questions about technologies not in their resume
+  
+  EXAMPLES (adjust based on their actual skills):
+  If they know JavaScript:
+    "Explain the difference between let, const, and var in JavaScript."
+  If they know databases:
+    "What are the main differences between NoSQL and SQL databases?"
+  If they know cloud services:
+    "How do you approach securing sensitive data in cloud applications?"
+  
+  FORMAT:
+  Return exactly 10 questions in this format:
+  1. [Basic concept question]
+  2. [Tool-specific question]
+  3. [Technology question]
+  ...etc.
+  
+  Each question must:
+  - Start with a number
+  - Be a complete sentence
+  - End with a question mark
+  - Be separated by a blank line
+  
+  Make each question unique and ensure it flows logically from their experience.
+  Prioritize questions about technologies and concepts they've actively used.`;
+  
       const response = await groqClient.chat.completions.create({
         messages: [{
           role: "user",
-          content: `Generate 10 separate and structured technical interview questions based on this resume: ${resumeText}. Format as a numbered list with clear separation.`
+          content: prompt
         }],
         model: "llama-3.3-70b-versatile",
         temperature: 0.3
       });
-
+  
       let questions = response.choices[0].message.content.split(/\d+\.\s+/).filter(q => q.trim());
-      if (questions.length > 10) questions = questions.slice(1, 11); // Remove unwanted first line if present
+      if (questions.length > 10) questions = questions.slice(1, 11);
       return questions;
+  
     } catch (error) {
       console.error("Error generating interview questions:", error);
       return [];

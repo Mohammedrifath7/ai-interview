@@ -2,12 +2,12 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from 'chart.js';
-import './Results.css';
+import './HRResults.css';
 
 // Register Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
 
-const Results = () => {
+const HRResults = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const { scores = [], totalScore = 0, passed = false, questions = [], answers = [] } = state || {};
@@ -106,17 +106,9 @@ const Results = () => {
       <button onClick={() => navigate('/')} className="restart-button">
         Start New Interview
       </button>
-      {/* {passed && (
-        <button onClick={() => navigate('/hr-interview')} className="hr-button">
-          Proceed to HR Interview
-        </button>
-      )} */}
-      <button onClick={() => navigate('/hr-interview')} className="hr-button">
-          Proceed to HR Interview
-        </button>
-
+     
     </div>
   );
 };
 
-export default Results;
+export default HRResults;

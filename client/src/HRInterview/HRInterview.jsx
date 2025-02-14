@@ -236,7 +236,7 @@ const HRInterview = () => {
       <video
           ref={videoRef}
           className="interviewer-video"
-          src="/The AI Video Interview(720P_HD)_1.mp4"
+          src="The AI Video Interview(720P_HD)_1.mp4"
           muted
           playsInline
         />

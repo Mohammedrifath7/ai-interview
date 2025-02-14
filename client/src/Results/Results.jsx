@@ -106,16 +106,12 @@ const Results = () => {
       <button onClick={() => navigate('/')} className="restart-button">
         Start New Interview
       </button>
-      {/* {passed && (
+      {passed && (
         <button onClick={() => navigate('/hr-interview')} className="hr-button">
           Proceed to HR Interview
         </button>
-      )} */}
-      <button onClick={() => navigate('/hr-interview')} className="hr-button">
-          Proceed to HR Interview
-        </button>
+      )}
       
-
     </div>
   );
 };

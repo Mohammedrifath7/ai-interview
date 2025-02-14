@@ -233,13 +233,14 @@ const HRInterview = () => {
   return (
     <div className="interview-root">
       <div className="video-wrapper">
-        <video
-          ref={videoRef}
-          className="interviewer-video"
-          src="../public/video/The AI Video Interview(720P_HD)_1.mp4"
-          muted
-          playsInline
-        />
+      <video
+  ref={videoRef}
+  className="interviewer-video"
+  src="/video/The AI Video Interview(720P_HD)_1.mp4"
+  muted
+  playsInline
+  controls
+/>
       </div>
       public\video\The AI Video Interview(720P_HD)_1.mp4
       

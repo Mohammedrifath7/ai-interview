@@ -236,11 +236,12 @@ const HRInterview = () => {
         <video
           ref={videoRef}
           className="interviewer-video"
-          src="/src/assets/The AI Video Interview(720P_HD)_1.mp4"
+          src="../public/video/The AI Video Interview(720P_HD)_1.mp4"
           muted
           playsInline
         />
       </div>
+      public\video\The AI Video Interview(720P_HD)_1.mp4
       
       <div className="interview-interface">
         <div className="question-container">

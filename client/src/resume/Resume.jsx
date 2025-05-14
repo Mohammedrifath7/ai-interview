@@ -47,6 +47,7 @@ const Resume = () => {
         apiKey: import.meta.env.VITE_GROQ_API_KEY, 
         dangerouslyAllowBrowser: true 
       });
+      console.log( import.meta.env.VITE_GROQ_API_KEY);
   
       const prompt = `Analyze this resume carefully and generate 10 unique technical interview questions. 
   Resume: ${resumeText}

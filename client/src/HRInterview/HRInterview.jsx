@@ -124,7 +124,7 @@ const HRInterview = () => {
 
   useEffect(() => {
     const generateHRQuestions = async () => {
-      const groqClient = new Groq({ apiKey: GROQ_API_KEY, dangerouslyAllowBrowser: true });
+      const groqClient = new Groq({ apiKey: import.meta.env.VITE_GROQ_API_KEY, dangerouslyAllowBrowser: true });
       try {
         const response = await groqClient.chat.completions.create({
           messages: [{
@@ -171,7 +171,7 @@ const HRInterview = () => {
 
   const evaluateAnswers = async () => {
     setIsSubmitting(true);
-    const groqClient = new Groq({ apiKey: GROQ_API_KEY, dangerouslyAllowBrowser: true });
+    const groqClient = new Groq({apiKey: import.meta.env.VITE_GROQ_API_KEY, dangerouslyAllowBrowser: true });
     const scores = [];
 
     try {

@@ -44,7 +44,7 @@ const Resume = () => {
   const generateInterviewQuestions = async (resumeText) => {
     try {
       const groqClient = new Groq({ 
-        apiKey: GROQ_API_KEY, 
+        apiKey: import.meta.env.VITE_GROQ_API_KEY, 
         dangerouslyAllowBrowser: true 
       });
   

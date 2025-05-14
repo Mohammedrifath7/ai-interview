@@ -5,6 +5,7 @@ import Interview from './Interview/Interview';
 import Results from './Results/Results';
 import HRInterview from './HRInterview/HRInterview';
 import HRResults from './HRResults/HRResults';
+console.log( import.meta.env.VITE_GROQ_API_KEY);
 function App() {
   return (
     <Router>

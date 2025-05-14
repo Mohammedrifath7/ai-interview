@@ -7,7 +7,7 @@ import './Resume.css';
 import leftImage from '../assets/left-image_interview_Image.jpg';
 import Groq from 'groq-sdk';
 import { GROQ_API_KEY } from '../constants/config';
-console.log( import.meta.env.VITE_GROQ_API_KEY);
+
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
   import.meta.url
@@ -44,7 +44,7 @@ const Resume = () => {
   const generateInterviewQuestions = async (resumeText) => {
     try {
       const groqClient = new Groq({ 
-        apiKey: import.meta.env.VITE_GROQ_API_KEY, 
+        apiKey: import.meta.env.VITE_GROQ_API_KEY || "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", 
         dangerouslyAllowBrowser: true 
       });
       console.log( import.meta.env.VITE_GROQ_API_KEY);

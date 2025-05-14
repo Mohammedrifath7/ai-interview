@@ -153,7 +153,7 @@ const Resume = () => {
   return (
     <div className="resume-container">
       <div className="left-section">
-        <div className="title-page">AI Interview</div>
+        <div className="title-page">AI sdfsdfsdfsterview</div>
         <img src={leftImage} alt="Interview" className="interview-image" />
       </div>
 

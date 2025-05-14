@@ -44,7 +44,8 @@ const Resume = () => {
   const generateInterviewQuestions = async (resumeText) => {
     try {
       const groqClient = new Groq({ 
-        apiKey: import.meta.env.VITE_GROQ_API_KEY, 
+        // apiKey: import.meta.env.VITE_GROQ_API_KEY, 
+        apiKey: "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", 
         dangerouslyAllowBrowser: true 
       });
       console.log( import.meta.env.VITE_GROQ_API_KEY);
@@ -153,7 +154,7 @@ const Resume = () => {
   return (
     <div className="resume-container">
       <div className="left-section">
-        <div className="title-page">AI sdfsdfsdfsterview</div>
+        <div className="title-page">AI Interview</div>
         <img src={leftImage} alt="Interview" className="interview-image" />
       </div>
 

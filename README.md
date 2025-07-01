@@ -1,3 +1,3 @@
 # ai-interview
 Deloyed Link :
-https://ai-interview-olive.vercel.app/
+https://ai-interview-r8wy.vercel.app/

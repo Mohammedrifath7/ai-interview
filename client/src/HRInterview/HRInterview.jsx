@@ -124,7 +124,7 @@ const HRInterview = () => {
 
   useEffect(() => {
     const generateHRQuestions = async () => {
-      const groqClient = new Groq({ apiKey: "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", dangerouslyAllowBrowser: true });
+      const groqClient = new Groq({ apiKey: import.meta.env.VITE_GROQ_API_KEY, dangerouslyAllowBrowser: true });
       try {
         const response = await groqClient.chat.completions.create({
           messages: [{
@@ -139,7 +139,7 @@ const HRInterview = () => {
               
               
           }],
-          model: "llama3-70b-8192",
+          model: "llama-3.3-70b-versatile",
           temperature: 0.8
         });
 
@@ -188,7 +188,7 @@ const HRInterview = () => {
               Answer: ${answers[i]}
               Provide a score between 0-10. Return ONLY the numeric score.`
           }],
-          model: "llama3-70b-8192",
+          model: "llama-3.3-70b-versatile",
           temperature: 0.1
         });
 
